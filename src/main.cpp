@@ -32,9 +32,9 @@ void HandleClayErrors(Clay_ErrorData errorData) {
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
-  SDL_SetAppMetadata("Longfellow", "1.0", "com.foxmoss.longfellow");
+  SDL_SetAppMetadata("uMessage", "1.0", "com.foxmoss.umessage");
 
-  ProgState *state = (ProgState *)SDL_calloc(1, sizeof(ProgState));
+  ProgState *state = new ProgState;
   *appstate = state;
   state->width = 480;
   state->height = 480;
@@ -44,12 +44,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
-  if (!SDL_CreateWindowAndRenderer("noko-desktop", state->width, state->height,
+  if (!SDL_CreateWindowAndRenderer("uMessage", state->width, state->height,
                                    SDL_WINDOW_RESIZABLE, &state->window,
                                    &state->renderer)) {
     SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  SDL_StartTextInput(state->window);
 
   if (!TTF_Init()) {
     SDL_Log("Couldn't initialize TTF: %s", SDL_GetError());
@@ -95,6 +97,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
       IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/down_50.png"));
   state->texture_array.push_back(
       IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/x.png"));
+  state->texture_array.push_back(
+      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/home.png"));
 
   size_t totalMemorySize = Clay_MinMemorySize();
   Clay_Arena clayMemory = (Clay_Arena){
@@ -142,8 +146,12 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
         true, (Clay_Vector2){event->wheel.x, event->wheel.y}, 0.01f);
     break;
   case SDL_EVENT_KEY_DOWN:
+  case SDL_EVENT_TEXT_INPUT:
+  case SDL_EVENT_TEXT_EDITING:
+    state->app->input_event(event);
     break;
   }
+
   return SDL_APP_CONTINUE;
 }
 
@@ -195,11 +203,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
       SDL_DestroyWindow(state->window);
 
     if (state->render_data.fonts) {
-      for (size_t i = 0; i < sizeof(state->render_data.fonts) /
-                                 sizeof(*state->render_data.fonts);
-           i++) {
-        TTF_CloseFont(state->render_data.fonts[i]);
-      }
+      TTF_CloseFont(state->lato_regular);
+      TTF_CloseFont(state->lato_regular_big);
 
       SDL_free(state->render_data.fonts);
     }
@@ -207,11 +212,12 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     for (auto texture : state->texture_array) {
       SDL_DestroyTexture(texture);
     }
+    state->texture_array.clear();
 
     if (state->render_data.textEngine)
       TTF_DestroyRendererTextEngine(state->render_data.textEngine);
 
-    SDL_free(state);
+    delete state;
   }
 
   TTF_Quit();

@@ -2,28 +2,24 @@
 
 #include "sdl_clay.h"
 #include <cstddef>
+#include <cstdio>
 #include <optional>
+#include <string>
+#include <unordered_map>
+#include <vector>
 struct ProgState;
 
 class App {
 public:
   App(ProgState *state) : state(state) {}
   ~App() {}
-  void draw() {
-    button_indexer = 0;
-    switch (layout) {
-    case LAYOUT_CONTACTS: {
-      layout_contacts();
-      break;
-    }
-    case LAYOUT_MESSAGE: {
-      layout_message();
-      break;
-    }
-    }
-  }
+  void draw();
 
-  void update_mouse(bool state) { mouse_state = state; }
+  void update_mouse(bool state) {
+    previous_mouse_state = mouse_state;
+    mouse_state = state;
+  }
+  void input_event(SDL_Event *event);
 
   struct ButtonState {
     Clay_Color text_color;
@@ -31,15 +27,32 @@ public:
   };
 
 private:
-  Clay_Color clay_button(Clay_ElementDeclaration base);
-  void side_bar_icon(size_t texture_index, float row_size);
+  ButtonState clay_button(Clay_ElementDeclaration base);
+  ButtonState clay_input(Clay_ElementDeclaration base);
+  ButtonState side_bar_icon(size_t texture_index, float row_size);
   void layout_contacts();
   void layout_message();
+  uint16_t small_font_size;
+  uint16_t large_font_size;
 
-  enum State { LAYOUT_CONTACTS, LAYOUT_MESSAGE } layout = LAYOUT_CONTACTS;
+  enum Layout { LAYOUT_CONTACTS, LAYOUT_MESSAGE };
+  Layout layout = LAYOUT_CONTACTS;
+  void switch_layout(Layout new_layout) {
+    layout = new_layout;
+    input_map.clear();
+    input_element_id.clear();
+    selected = {};
+  }
+
   ProgState *state;
   bool mouse_state = false;
+  bool previous_mouse_state = false;
 
   size_t button_indexer = 0;
   std::optional<size_t> selected = {};
+  std::unordered_map<size_t, std::string> input_map;
+  std::unordered_map<size_t, std::vector<size_t>> input_split_map;
+  std::unordered_map<size_t, size_t> input_cursor_index_map;
+  std::unordered_map<size_t, Clay_Vector2> input_cursor_location_map;
+  std::unordered_map<size_t, Clay_String> input_element_id;
 };

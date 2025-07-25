@@ -1,5 +1,6 @@
 add_executable(longfellow
   main.cpp
+  app.cpp
   layouts.cpp
   clay.c
   sdl_clay.c
