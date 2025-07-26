@@ -62,7 +62,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_Log("Couldn't initialize font: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
-  TTF_SetFontWrapAlignment(state->lato_regular, TTF_HORIZONTAL_ALIGN_CENTER);
+  TTF_SetFontWrapAlignment(state->lato_regular, TTF_HORIZONTAL_ALIGN_LEFT);
 
   state->lato_regular_big = TTF_OpenFont(PUBLIC_FOLDER "Lato-Bold.ttf", 14);
   if (state->lato_regular_big == NULL) {

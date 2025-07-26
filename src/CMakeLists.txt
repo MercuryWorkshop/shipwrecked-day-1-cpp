@@ -1,4 +1,4 @@
-add_executable(longfellow
+add_executable(umessage
   main.cpp
   app.cpp
   layouts.cpp
@@ -6,8 +6,8 @@ add_executable(longfellow
   sdl_clay.c
 )
 if (EMSCRIPTEN)
-  target_compile_options(longfellow PRIVATE -DEMSCRIPTEN)
-  target_link_options(longfellow PRIVATE --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/../webport/index.html" --preload-file "${CMAKE_CURRENT_SOURCE_DIR}/../public@/" -sINITIAL_MEMORY=70254592)
+  target_compile_options(umessage PRIVATE -DEMSCRIPTEN)
+  target_link_options(umessage PRIVATE --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/../webport/index.html" --preload-file "${CMAKE_CURRENT_SOURCE_DIR}/../public@/" -sINITIAL_MEMORY=70254592)
   set(CMAKE_EXECUTABLE_SUFFIX ".html" CACHE INTERNAL "")
   set(SDLIMAGE_VENDORED ON)
   set(SDLTTF_VENDORED ON)
@@ -66,10 +66,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libguthrie-client)
 
-target_link_libraries(longfellow PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client)
-target_include_directories(longfellow PRIVATE ${clay_SOURCE_DIR})
+target_link_libraries(umessage PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client)
+target_include_directories(umessage PRIVATE ${clay_SOURCE_DIR})
 
-add_custom_command(TARGET longfellow POST_BUILD
+add_custom_command(TARGET umessage POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/compile_commands.json
         ${CMAKE_SOURCE_DIR}/compile_commands.json
