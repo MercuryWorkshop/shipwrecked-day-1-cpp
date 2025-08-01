@@ -1,5 +1,6 @@
 #pragma once
 
+#include "longterm.h"
 #include "sdl_clay.h"
 #include <cstddef>
 #include <cstdio>
@@ -11,7 +12,13 @@ struct ProgState;
 
 class App {
 public:
-  App(ProgState *state) : state(state) {}
+  App(ProgState *state) : state(state), longterm_db() {
+    longterm_db.open_thread({
+        .type = LongtermDatabase::Thread::THREAD_DIRECT,
+        .id =
+            "50b37fb1f57045ce5245642494446daa7b9ec2c06acda810db957aa7f05e0230",
+    });
+  }
   ~App() {}
   void draw();
 
@@ -55,4 +62,6 @@ private:
   std::unordered_map<size_t, size_t> input_cursor_index_map;
   std::unordered_map<size_t, Clay_Vector2> input_cursor_location_map;
   std::unordered_map<size_t, Clay_String> input_element_id;
+
+  LongtermDatabase longterm_db;
 };

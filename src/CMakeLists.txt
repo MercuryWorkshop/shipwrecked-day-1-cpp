@@ -2,6 +2,7 @@ add_executable(umessage
   main.cpp
   app.cpp
   layouts.cpp
+  longterm.cpp
   clay.c
   sdl_clay.c
 )
@@ -13,9 +14,18 @@ if (EMSCRIPTEN)
   set(SDLTTF_VENDORED ON)
 endif()
 
+target_compile_options(umessage PRIVATE -Wno-write-strings)
+
+if(CMAKE_BUILD_TYPE EQUAL Release)
+  add_compile_options(-Os -ffunction-sections -fdata-sections -Wl,--gc-sections)
+  add_link_options(-Os -ffunction-sections -fdata-sections -Wl,--gc-sections)
+endif()
+
 set(SDL_LIBC ON)
 set(SDL_TEST_LIBRARY OFF)
 set(SDL_TESTS OFF)
+set(SDL_OPENGLES OFF)
+set(SDL_VIDEO ON)
 set(SDLIMAGE_AVIF OFF)	# disable formats we don't use to make the build faster and smaller.
 set(SDLIMAGE_BMP OFF)
 set(SDLIMAGE_JPEG OFF)
@@ -66,8 +76,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libguthrie-client)
 
-target_link_libraries(umessage PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client)
-target_include_directories(umessage PRIVATE ${clay_SOURCE_DIR})
+find_package (SQLite3)
+
+target_link_libraries(umessage PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client ${SQLite3_LIBRARIES})
+target_include_directories(umessage PRIVATE ${clay_SOURCE_DIR} ${SQLite3_INCLUDE_DIRS})
 
 add_custom_command(TARGET umessage POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy

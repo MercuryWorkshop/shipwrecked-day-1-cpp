@@ -6,6 +6,7 @@
 #include <cstdio>
 
 void App::draw() {
+  longterm_db.step();
   button_indexer = 0;
   small_font_size = state->height / 27;
   large_font_size = state->height / 20;

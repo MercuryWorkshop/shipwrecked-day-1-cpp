@@ -2,9 +2,11 @@
 #include "main.h"
 #include "sdl_clay.h"
 #include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <stddef.h>
+#include <string>
 
 App::ButtonState App::clay_input(Clay_ElementDeclaration base) {
   Clay__OpenElement();
@@ -260,13 +262,29 @@ void App::layout_contacts() {
           .clip = {.vertical = true},
       }) {
 
+        auto contacts = longterm_db.get_contacts();
+        auto contact = contacts.begin();
+
         for (int i = 0; i < 4; i++) {
+          if (contact == contacts.end()) {
+            CLAY({.id = CLAY_IDI("BlankRow", i),
+                  .layout = {.sizing = {CLAY_SIZING_GROW(0),
+                                        CLAY_SIZING_FIXED(row_size)},
+                             .padding = CLAY_PADDING_ALL(10),
+                             .childGap = 10,
+                             .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
+                                                .y = CLAY_ALIGN_Y_CENTER},
+                             .layoutDirection = CLAY_LEFT_TO_RIGHT}}) {}
+
+            continue;
+          }
+
           App::ButtonState button_state = clay_button(
               {.layout = {
                    .sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(row_size)},
                    .padding = CLAY_PADDING_ALL(10),
                    .childGap = 10,
-                   .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
+                   .childAlignment = {.x = CLAY_ALIGN_X_LEFT,
                                       .y = CLAY_ALIGN_Y_CENTER},
                    .layoutDirection = CLAY_LEFT_TO_RIGHT}});
 
@@ -295,15 +313,20 @@ void App::layout_contacts() {
                       .layoutDirection = CLAY_TOP_TO_BOTTOM,
                   },
           }) {
+            Clay_String username_str = {
+                .isStaticallyAllocated = false,
+                .length = (int32_t)contact->second.contact_name.size(),
+                .chars =
+                    longterm_db.get_allocated(contact->second.contact_name),
+            };
 
-            CLAY_TEXT(CLAY_STRING("FoxMoss"),
-                      CLAY_TEXT_CONFIG({
-                          .textColor = button_state.text_color,
-                          .fontId = 0,
-                          .fontSize = small_font_size,
-                          .textAlignment = CLAY_TEXT_ALIGN_CENTER,
-                      }));
-            CLAY_TEXT(CLAY_STRING("Lorem ipsum dolor sit amet"),
+            CLAY_TEXT(username_str, CLAY_TEXT_CONFIG({
+                                        .textColor = button_state.text_color,
+                                        .fontId = 0,
+                                        .fontSize = small_font_size,
+                                        .textAlignment = CLAY_TEXT_ALIGN_CENTER,
+                                    }));
+            CLAY_TEXT(CLAY_STRING("Direct Message"),
                       CLAY_TEXT_CONFIG({
                           .textColor = {button_state.text_color.r,
                                         button_state.text_color.g,
@@ -314,15 +337,29 @@ void App::layout_contacts() {
                       }));
           }
           Clay__CloseElement();
+
+          contact++;
         }
         for (int i = 4; i < 4 + 3; i++) {
+          if (contact == contacts.end()) {
+            CLAY({.id = CLAY_IDI("BlankRow", i),
+                  .layout = {.sizing = {CLAY_SIZING_GROW(0),
+                                        CLAY_SIZING_FIXED(row_size)},
+                             .padding = CLAY_PADDING_ALL(10),
+                             .childGap = 10,
+                             .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
+                                                .y = CLAY_ALIGN_Y_CENTER},
+                             .layoutDirection = CLAY_LEFT_TO_RIGHT}}) {}
+
+            continue;
+          }
 
           CLAY({.id = CLAY_IDI("ProfileContainer", i),
                 .layout = {.sizing = {CLAY_SIZING_GROW(0),
                                       CLAY_SIZING_FIXED(row_size)},
                            .padding = CLAY_PADDING_ALL(10),
                            .childGap = 10,
-                           .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
+                           .childAlignment = {.x = CLAY_ALIGN_X_LEFT,
                                               .y = CLAY_ALIGN_Y_CENTER},
 
                            .layoutDirection = CLAY_LEFT_TO_RIGHT}}) {
@@ -359,14 +396,21 @@ void App::layout_contacts() {
                     },
             }) {
 
-              CLAY_TEXT(CLAY_STRING("FoxMoss"),
+              Clay_String username_str = {
+                  .isStaticallyAllocated = false,
+                  .length = (int32_t)contact->second.contact_name.size(),
+                  .chars =
+                      longterm_db.get_allocated(contact->second.contact_name),
+              };
+
+              CLAY_TEXT(username_str,
                         CLAY_TEXT_CONFIG({
                             .textColor = {TEXT_COLOR, 50},
                             .fontId = 0,
                             .fontSize = small_font_size,
                             .textAlignment = CLAY_TEXT_ALIGN_CENTER,
                         }));
-              CLAY_TEXT(CLAY_STRING("Lorem ipsum dolor sit amet"),
+              CLAY_TEXT(CLAY_STRING("Direct Message"),
                         CLAY_TEXT_CONFIG({
                             .textColor = {TEXT_COLOR, 25},
                             .fontId = 0,
@@ -470,6 +514,11 @@ void App::layout_message() {
                   .sizing = {CLAY_SIZING_PERCENT(0.8), CLAY_SIZING_GROW(0)},
                   .layoutDirection = CLAY_TOP_TO_BOTTOM,
               },
+          .clip =
+              {
+                  .horizontal = true,
+              },
+
       }) {
         CLAY({
             .id = CLAY_ID("MessagesContainer"),
@@ -485,18 +534,69 @@ void App::layout_message() {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
 
                 },
-            .backgroundColor = {255, 0, 0, 50},
-            .clip = {.vertical = true},
-        }) {}
-        CLAY({.id = CLAY_ID("TextBox"),
+            .clip =
+                {
+                    .vertical = true,
+                },
+        }) {
+
+          CLAY({
+              .id = CLAY_ID("MessageInvisible"),
               .layout =
                   {
-                      .sizing = {CLAY_SIZING_PERCENT(1), CLAY_SIZING_FIT(0)},
-                      .padding = {16, 16, 16, 16},
-                      .childGap = 16,
-
+                      .sizing = {CLAY_SIZING_PERCENT(1), CLAY_SIZING_GROW(0)},
                   },
-              .backgroundColor = {0, 255, 0, 50}}) {
+          }) {}
+
+          for (auto message : longterm_db.get_messages_queue()) {
+            CLAY({
+                .id = CLAY_IDI("Message", message.local_id),
+                .layout =
+                    {
+                        .sizing = {CLAY_SIZING_PERCENT(1), CLAY_SIZING_FIT(0)},
+                        .layoutDirection = CLAY_TOP_TO_BOTTOM,
+                    },
+            }) {
+              auto contacts = longterm_db.get_contacts();
+              std::string username = "Unknown Sender";
+              if (contacts.contains(message.sender)) {
+                username = contacts[message.sender].contact_name;
+              }
+
+              Clay_String username_str = {
+                  .isStaticallyAllocated = false,
+                  .length = (int32_t)username.size(),
+                  .chars = longterm_db.get_allocated(username),
+              };
+              Clay_String message_str = {
+                  .isStaticallyAllocated = false,
+                  .length = (int32_t)message.message.size(),
+                  .chars = longterm_db.get_allocated(message.message),
+              };
+
+              CLAY_TEXT(username_str, CLAY_TEXT_CONFIG({
+                                          .textColor = {TEXT_COLOR, 255},
+                                          .fontId = 0,
+                                          .fontSize = small_font_size,
+                                      }));
+              CLAY_TEXT(message_str, CLAY_TEXT_CONFIG({
+                                         .textColor = {TEXT_COLOR, 100},
+                                         .fontId = 0,
+                                         .fontSize = small_font_size,
+                                     }));
+            }
+          }
+        }
+        CLAY({
+            .id = CLAY_ID("TextBox"),
+            .layout =
+                {
+                    .sizing = {CLAY_SIZING_PERCENT(1), CLAY_SIZING_FIT(0)},
+                    .padding = {16, 16, 16, 16},
+                    .childGap = 16,
+
+                },
+        }) {
           clay_input({
               .layout{
                   .sizing = {CLAY_SIZING_GROW(0),
