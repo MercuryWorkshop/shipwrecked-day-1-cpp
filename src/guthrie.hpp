@@ -94,7 +94,7 @@ public:
     this->sender = sender;
     this->particles = particles;
 
-    OptionalGuthrieState op = guthrie_init("127.0.0.1", 8448);
+    OptionalGuthrieState op = guthrie_init(host, port);
     if (op.type == OptionalGuthrieState::Type::TYPE_ERROR) {
       printf("%s\n", op.data.error_str);
       return SDL_APP_FAILURE;
