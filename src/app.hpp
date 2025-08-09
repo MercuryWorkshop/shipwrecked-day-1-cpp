@@ -30,8 +30,10 @@ public:
   float last_y = 0;
 
   void draw() {
+
     for (auto part : particles) {
-      SDL_FRect rect = {.x = part.x, .y = part.y, .w = MAX_DIST, .h = MAX_DIST};
+      SDL_FRect rect = {
+          .x = part.x, .y = part.y, .w = MAX_DIST * 2, .h = MAX_DIST * 2};
       SDL_RenderTexture(state->renderer, state->texture_array[0], NULL, &rect);
     }
   }
@@ -40,7 +42,7 @@ public:
     float dist = std::sqrt(pow(last_x - event->motion.x, 2) +
                            pow(last_y - event->motion.y, 2));
 
-    if (event->motion.state == SDL_BUTTON_LEFT && dist > 10) {
+    if (event->motion.state == SDL_BUTTON_LEFT && dist > 50) {
       last_x = event->motion.x;
       last_y = event->motion.y;
       particles.push_back({event->motion.x, event->motion.y, 0, 0});
