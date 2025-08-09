@@ -66,7 +66,7 @@ bool deserializeVectorOfParticles(const char *serialized_data,
     int items_assigned =
         sscanf(segment.c_str(), "%f,%f,%f,%i", &x, &y, &decay, &id);
 
-    if (items_assigned != 3) {
+    if (items_assigned != 4) {
       std::cerr << "Error: Failed to parse x,y,decay,id for particle " << i + 1
                 << ". Segment: \"" << segment << "\"" << std::endl;
       particles->clear(); // Clean up partially deserialized data
