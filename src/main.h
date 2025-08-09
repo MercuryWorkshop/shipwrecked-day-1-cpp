@@ -33,6 +33,8 @@ struct ProgState {
 
   int width;
   int height;
+
+  size_t delta = 0;
 };
 
 #define BACKGROUND_COLOR 251, 251, 254

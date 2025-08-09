@@ -187,6 +187,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   Uint64 now = SDL_GetTicksNS();
   Uint64 dt_ns = now - past;
   static char debug_string[32];
+  state->delta = dt_ns;
 
   if (now - last > 999999999) {
     last = now;
@@ -202,8 +203,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   }
 
   if (now - last_send > 1e9) {
-	  last_send = now;
-	  state->guthrie->send_state();
+    last_send = now;
+    state->guthrie->send_state();
   }
 
   SDL_SetRenderDrawColor(state->renderer, PRIMARY_COLOR, SDL_ALPHA_OPAQUE);

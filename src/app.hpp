@@ -14,6 +14,8 @@ struct Particle {
 
   float vel_x;
   float vel_y;
+
+  float decay;
 };
 
 #define START_DIST 40
@@ -33,7 +35,10 @@ public:
 
     for (auto part : particles) {
       SDL_FRect rect = {
-          .x = part.x, .y = part.y, .w = MAX_DIST * 1.25, .h = MAX_DIST * 1.25};
+          .x = part.x,
+          .y = part.y,
+          .w = std::lerp((float)MAX_DIST * 2, (float)0, part.decay),
+          .h = std::lerp((float)MAX_DIST * 2, (float)0, part.decay)};
       SDL_RenderTexture(state->renderer, state->texture_array[0], NULL, &rect);
     }
   }
@@ -56,6 +61,17 @@ public:
 
       part.vel_x *= 0.3;
       part.vel_y *= 0.3;
+      part.decay += (float)state->delta / 1000000000;
+
+      std::vector<std::vector<Particle>::iterator> iters;
+      for (auto iter = particles.begin(); iter != particles.end(); iter++) {
+        if (iter->decay > 1) {
+          iters.push_back(iter);
+        }
+      }
+      for (auto iter : iters) {
+        particles.erase(iter);
+      }
 
       part.x += part.vel_x;
       part.y += part.vel_y;
