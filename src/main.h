@@ -2,7 +2,9 @@
 #include "SDL3/SDL_render.h"
 #include "sdl_clay.h"
 #include <cstddef>
+extern "C" {
 #include <guthrie.h>
+}
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>

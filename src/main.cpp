@@ -7,7 +7,9 @@
 
 #include "main.h"
 #include "sdl_clay.h"
+extern "C" {
 #include <guthrie.h>
+}
 #include <stdio.h>
 #include <stdlib.h>
 
