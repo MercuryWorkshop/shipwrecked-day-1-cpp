@@ -37,25 +37,14 @@ public:
   }
 
   void event(SDL_Event *event) {
-    #if defined(__OSX__) || defined(__APPLE__)
-    sqrt(pow(last_x - event->motion.x,
-              last_x - event->motion.x));
-    if (event->motion.state ==
-                                             SDL_BUTTON_LEFT) {
+    float dist = std::sqrt(pow(last_x - event->motion.x, 2) +
+                           pow(last_y - event->motion.y, 2));
+
+    if (event->motion.state == SDL_BUTTON_LEFT && dist > 10) {
       last_x = event->motion.x;
       last_y = event->motion.y;
       particles.push_back({event->motion.x, event->motion.y, 0, 0});
     }
-    #else
-    fsqrt(pow(last_x - event->motion.x,
-              last_x - event->motion.x));
-    if (event->motion.state ==
-                                             SDL_BUTTON_LEFT) {
-      last_x = event->motion.x;
-      last_y = event->motion.y;
-      particles.push_back({event->motion.x, event->motion.y, 0, 0});
-    }
-    #endif
   }
 
   void step() {
