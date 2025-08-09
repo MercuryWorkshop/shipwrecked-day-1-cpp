@@ -15,10 +15,8 @@ extern "C" {
 #define PUBLIC_FOLDER "./"
 #endif
 
-enum GuthrieAuth {
-	UNAUTHED,
-	AUTHED
-};
+enum GuthrieAuth { UNAUTHED, AUTHED };
+class App;
 
 struct ProgState {
   SDL_Window *window = NULL;
@@ -32,6 +30,7 @@ struct ProgState {
 
   GuthrieState *client = NULL;
   GuthrieAuth auth = GuthrieAuth::UNAUTHED;
+  App *app;
 
   int width;
   int height;

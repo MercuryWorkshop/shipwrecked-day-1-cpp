@@ -1,4 +1,5 @@
 #include "SDL3_image/SDL_image.h"
+#include "app.hpp"
 #include <SDL3/SDL_events.h>
 #define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL.h>
@@ -87,6 +88,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   state->render_data.fonts[0] = state->lato_regular;
   state->render_data.fonts[1] = state->lato_regular_big;
   state->render_data.fonts[2] = state->lato_regular_tiny;
+  state->app = new App(480, 480, state);
 
   state->texture_array.push_back(
       IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "foxmoss-pfp.png"));
@@ -227,6 +229,9 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   SDL_RenderDebugText(state->renderer, 0, 0, debug_string);
 
+  state->app->step();
+  state->app->draw();
+
   SDL_RenderPresent(state->renderer);
 
   return SDL_APP_CONTINUE;
@@ -236,7 +241,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
   ProgState *state = (ProgState *)appstate;
 
   if (state != NULL) {
-
+    delete state->app;
     if (state->render_data.renderer)
       SDL_DestroyRenderer(state->render_data.renderer);
 
