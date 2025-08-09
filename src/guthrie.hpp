@@ -63,20 +63,18 @@ bool deserializeVectorOfParticles(const char *serialized_data,
       return false;
     }
 
-    float x, y;
+    float x, y, decay;
     // Use sscanf on the segment to parse x and y
-    int items_assigned = sscanf(segment.c_str(), "%f,%f", &x, &y);
+    int items_assigned = sscanf(segment.c_str(), "%f,%f,%f", &x, &y, &decay);
 
-    if (items_assigned != 2) {
-      std::cerr << "Error: Failed to parse x,y for particle " << i + 1
+    if (items_assigned != 3) {
+      std::cerr << "Error: Failed to parse x,y,decay for particle " << i + 1
                 << ". Segment: \"" << segment << "\"" << std::endl;
       particles->clear(); // Clean up partially deserialized data
       return false;
     }
 
-
-    particles->push_back(
-        {x, y, 0, 0}); // vel_x and vel_y are not restored
+    particles->push_back({x, y, 0, 0, decay}); // vel_x and vel_y are not restored
   }
 
   return true; // Deserialization successful
@@ -150,7 +148,7 @@ public:
     ss << particles->size();
     ss << std::fixed << std::setprecision(2);
     for (const auto &p : *this->particles) {
-      ss << "|" << p.x << "," << p.y;
+      ss << "|" << p.x << "," << p.y << "," << p.decay;
     }
 
     std::string s = ss.str();
