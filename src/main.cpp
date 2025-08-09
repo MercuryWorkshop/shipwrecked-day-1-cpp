@@ -116,7 +116,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   if (argc > 2) {
     port = atoi(argv[2]);
   }
-  state->guthrie->init(host, port);
+  std::string name =
+      ":3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3";
+  state->guthrie->init(host, port, name, &state->app->particles);
 
   return SDL_APP_CONTINUE;
 }
@@ -178,6 +180,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(state->renderer, BACKGROUND_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(state->renderer);
 
+  static Uint64 last_send = 0;
   static Uint64 accu = 0;
   static Uint64 last = 0;
   static Uint64 past = 0;
@@ -196,6 +199,11 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   Uint64 elapsed = SDL_GetTicks() - now;
   if (elapsed < 999999) {
     SDL_DelayNS(999999 - elapsed);
+  }
+
+  if (now - last_send > 1e9) {
+	  last_send = now;
+	  state->guthrie->send_state();
   }
 
   SDL_SetRenderDrawColor(state->renderer, PRIMARY_COLOR, SDL_ALPHA_OPAQUE);
