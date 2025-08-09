@@ -11,9 +11,9 @@
 extern "C" {
 #include <guthrie.h>
 }
+#include "guthrie.hpp"
 #include <stdio.h>
 #include <stdlib.h>
-#include "guthrie.hpp"
 
 static inline Clay_Dimensions SDL_MeasureText(Clay_StringSlice text,
                                               Clay_TextElementConfig *config,
@@ -92,23 +92,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   state->app = new App(480, 480, state);
 
   state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "foxmoss-pfp.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/plus.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/profile.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/up.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/down.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/up_50.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/down_50.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/x.png"));
-  state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "icons/home.png"));
+      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "octo.png"));
 
   size_t totalMemorySize = Clay_MinMemorySize();
   Clay_Arena clayMemory = (Clay_Arena){
@@ -126,8 +110,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     host = argv[1];
   }
   state->guthrie->init(host);
-
-  printf("init done\n");
 
   return SDL_APP_CONTINUE;
 }
@@ -147,12 +129,14 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   case SDL_EVENT_MOUSE_MOTION:
     Clay_SetPointerState((Clay_Vector2){event->motion.x, event->motion.y},
                          event->motion.state & SDL_BUTTON_LMASK);
+    if (event->button.button == SDL_BUTTON_LEFT) {
+      state->app->event(event);
+    }
+
     break;
   case SDL_EVENT_MOUSE_BUTTON_DOWN:
     Clay_SetPointerState((Clay_Vector2){event->button.x, event->button.y},
                          event->button.button == SDL_BUTTON_LEFT);
-    if (event->button.button == SDL_BUTTON_LEFT) {
-    }
     break;
   case SDL_EVENT_MOUSE_BUTTON_UP:
     if (event->button.button == SDL_BUTTON_LEFT) {
@@ -182,7 +166,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   SDL_AppResult loop_ret = AppLoop(appstate);
   if (loop_ret != SDL_APP_CONTINUE)
-	  return loop_ret;
+    return loop_ret;
 
   SDL_SetRenderDrawColor(state->renderer, BACKGROUND_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(state->renderer);
@@ -207,6 +191,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_DelayNS(999999 - elapsed);
   }
 
+  SDL_SetRenderDrawColor(state->renderer, PRIMARY_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderDebugText(state->renderer, 0, 0, debug_string);
 
   state->app->step();
