@@ -1,8 +1,5 @@
 add_executable(umessage
   main.cpp
-  app.cpp
-  layouts.cpp
-  longterm.cpp
   clay.c
   sdl_clay.c
 )
@@ -63,7 +60,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(clay)
 
-set(BUILD_LIB ON)
+set(BUILD_ALL Off)
+set(BUILD_LIBRARY On)
 FetchContent_Declare(
   libguthrie-client 
   GIT_REPOSITORY https://github.com/FoxMoss/guthrie
