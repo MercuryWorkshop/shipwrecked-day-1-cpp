@@ -4,8 +4,8 @@ add_executable(umessage
   sdl_clay.c
 )
 if (EMSCRIPTEN)
-  target_compile_options(umessage PRIVATE -DEMSCRIPTEN --use-port=sqlite3 -sEXPORTED_RUNTIME_METHODS=ccall,cwrap)
-  target_link_options(umessage PRIVATE --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/../webport/index.html" --preload-file "${CMAKE_CURRENT_SOURCE_DIR}/../public@/" -sINITIAL_MEMORY=70254592 --use-port=sqlite3)
+  target_compile_options(umessage PRIVATE -DEMSCRIPTEN -sEXPORTED_RUNTIME_METHODS=ccall,cwrap)
+  target_link_options(umessage PRIVATE --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/../webport/index.html" --preload-file "${CMAKE_CURRENT_SOURCE_DIR}/../public@/" -sINITIAL_MEMORY=70254592)
   set(CMAKE_EXECUTABLE_SUFFIX ".html" CACHE INTERNAL "")
   # set(SDLIMAGE_VENDORED ON)
   # set(SDLTTF_VENDORED ON)
@@ -69,8 +69,6 @@ FetchContent_Declare(
   GIT_SHALLOW 1
 )
 FetchContent_MakeAvailable(libguthrie-client)
-
-find_package (SQLite3)
 
 target_link_libraries(umessage PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client ${SQLite3_LIBRARIES})
 target_include_directories(umessage PRIVATE ${clay_SOURCE_DIR} ${SQLite3_INCLUDE_DIRS})
