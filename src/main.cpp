@@ -124,6 +124,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   }
   state->client = op.data.state;
   guthrie_send_version(state->client);
+  if (guthrie_send_auth(state->client, ":3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3", ":3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3") == -1) {
+    printf("a\n");
+  }
+
+  printf("init done\n");
 
   return SDL_APP_CONTINUE;
 }
@@ -167,8 +172,35 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   return SDL_APP_CONTINUE;
 }
 
+SDL_AppResult AppLoop(void *appstate) {
+  ProgState *state = (ProgState *)appstate;
+
+  enum Status status = guthrie_async_read(state->client);
+  if (status == Status::STATUS_PACKET_AVAILABLE) {
+    UniversalPacket *packet = guthrie_parse_packet(state->client);
+	if (
+      packet->payload_case == UniversalPacket__PayloadCase::UNIVERSAL_PACKET__PAYLOAD_AFFIRM &&
+	  packet->affirm->type == AffirmationType::AFFIRMATION_TYPE__AFFIRM_LOGIN
+	) {
+      state->auth = GuthrieAuth::AUTHED;
+	  printf("logged in\n");
+	}
+	if (packet->payload_case == UniversalPacket__PayloadCase::UNIVERSAL_PACKET__PAYLOAD_ERROR)
+	  printf("error: %s\n", packet->error->error);
+	printf("packet\n");
+  } else if (status == Status::STATUS_EXIT) {
+    return SDL_APP_SUCCESS;
+  }
+
+  return SDL_APP_CONTINUE;
+}
+
 SDL_AppResult SDL_AppIterate(void *appstate) {
   ProgState *state = (ProgState *)appstate;
+
+  SDL_AppResult loop_ret = AppLoop(appstate);
+  if (loop_ret != SDL_APP_CONTINUE)
+	  return loop_ret;
 
   SDL_SetRenderDrawColor(state->renderer, BACKGROUND_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(state->renderer);

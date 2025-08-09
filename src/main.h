@@ -15,6 +15,11 @@ extern "C" {
 #define PUBLIC_FOLDER "./"
 #endif
 
+enum GuthrieAuth {
+	UNAUTHED,
+	AUTHED
+};
+
 struct ProgState {
   SDL_Window *window = NULL;
   SDL_Renderer *renderer = NULL;
@@ -26,6 +31,7 @@ struct ProgState {
   std::vector<SDL_Texture *> texture_array;
 
   GuthrieState *client = NULL;
+  GuthrieAuth auth = GuthrieAuth::UNAUTHED;
 
   int width;
   int height;
