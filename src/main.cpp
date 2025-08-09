@@ -1,3 +1,4 @@
+#include "SDL3/SDL_video.h"
 #include "SDL3_image/SDL_image.h"
 #include "app.hpp"
 #include <SDL3/SDL_events.h>
@@ -54,6 +55,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  SDL_SetWindowMinimumSize(state->window, 300, 300);
 
   SDL_StartTextInput(state->window);
 

@@ -33,7 +33,7 @@ public:
 
     for (auto part : particles) {
       SDL_FRect rect = {
-          .x = part.x, .y = part.y, .w = MAX_DIST * 2, .h = MAX_DIST * 2};
+          .x = part.x, .y = part.y, .w = MAX_DIST * 1.25, .h = MAX_DIST * 1.25};
       SDL_RenderTexture(state->renderer, state->texture_array[0], NULL, &rect);
     }
   }
