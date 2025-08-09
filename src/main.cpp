@@ -110,7 +110,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   Clay_SetMeasureTextFunction(SDL_MeasureText, state->render_data.fonts);
 
   state->guthrie = new Guthrie();
-  char *host = "127.0.0.1";
+  char *host = "205.185.125.167";
   int port = 8448;
   if (argc > 1) {
     host = argv[1];
