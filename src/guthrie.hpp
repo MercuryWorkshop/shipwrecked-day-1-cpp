@@ -74,7 +74,9 @@ bool deserializeVectorOfParticles(const char *serialized_data,
       return false;
     }
 
-    particles->push_back({x, y, 0.0f, 0.0f}); // vel_x and vel_y are not restored
+
+    particles->push_back(
+        {x, y, 0, 0}); // vel_x and vel_y are not restored
   }
 
   return true; // Deserialization successful
@@ -129,7 +131,6 @@ public:
               UniversalPacket__PayloadCase::UNIVERSAL_PACKET__PAYLOAD_MSG &&
           prefix(STATE_PREFIX, packet->msg->message)) {
         char *message = packet->msg->message + strlen(STATE_PREFIX);
-        printf("william daniel! %s\n", message);
         if (!deserializeVectorOfParticles(message, this->particles)) {
           printf("fail\n");
           return SDL_APP_FAILURE;
@@ -147,7 +148,7 @@ public:
     ss << STATE_PREFIX;
 
     ss << particles->size();
-    ss << std::fixed << std::setprecision(7);
+    ss << std::fixed << std::setprecision(2);
     for (const auto &p : *this->particles) {
       ss << "|" << p.x << "," << p.y;
     }
