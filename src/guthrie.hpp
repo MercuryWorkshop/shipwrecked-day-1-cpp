@@ -8,8 +8,8 @@ class Guthrie {
   GuthrieAuth auth = GuthrieAuth::UNAUTHED;
 
 public:
-  SDL_AppResult init(char *host) {
-    OptionalGuthrieState op = guthrie_init(host, 8448);
+  SDL_AppResult init(char *host, int port) {
+    OptionalGuthrieState op = guthrie_init(host, port);
     if (op.type == OptionalGuthrieState::Type::TYPE_ERROR) {
       printf("%s\n", op.data.error_str);
       return SDL_APP_FAILURE;

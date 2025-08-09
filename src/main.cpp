@@ -106,10 +106,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   state->guthrie = new Guthrie();
   char *host = "127.0.0.1";
+  int port = 8448;
   if (argc > 1) {
     host = argv[1];
   }
-  state->guthrie->init(host);
+  if (argc > 2) {
+    port = atoi(argv[2]);
+  }
+  state->guthrie->init(host, port);
 
   return SDL_APP_CONTINUE;
 }
