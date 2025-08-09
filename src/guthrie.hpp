@@ -21,9 +21,6 @@ bool deserializeVectorOfParticles(const char *serialized_data,
     return false;
   }
 
-  // Clear any existing particles in the vector.
-  particles->clear();
-
   std::string s(serialized_data);
   std::stringstream ss(s);
   std::string segment;
@@ -64,17 +61,20 @@ bool deserializeVectorOfParticles(const char *serialized_data,
     }
 
     float x, y, decay;
+    int id;
     // Use sscanf on the segment to parse x and y
-    int items_assigned = sscanf(segment.c_str(), "%f,%f,%f", &x, &y, &decay);
+    int items_assigned =
+        sscanf(segment.c_str(), "%f,%f,%f,%i", &x, &y, &decay, &id);
 
     if (items_assigned != 3) {
-      std::cerr << "Error: Failed to parse x,y,decay for particle " << i + 1
+      std::cerr << "Error: Failed to parse x,y,decay,id for particle " << i + 1
                 << ". Segment: \"" << segment << "\"" << std::endl;
       particles->clear(); // Clean up partially deserialized data
       return false;
     }
 
-    particles->push_back({x, y, 0, 0, decay}); // vel_x and vel_y are not restored
+    particles->push_back(
+        {x, y, 0, 0, decay}); // vel_x and vel_y are not restored
   }
 
   return true; // Deserialization successful
@@ -145,10 +145,21 @@ public:
     std::stringstream ss;
     ss << STATE_PREFIX;
 
-    ss << particles->size();
+    size_t size = 0;
+    for (auto &p : *this->particles) {
+      if (p.sent)
+        continue;
+      size++;
+    }
+
+    ss << size;
     ss << std::fixed << std::setprecision(2);
-    for (const auto &p : *this->particles) {
-      ss << "|" << p.x << "," << p.y << "," << p.decay;
+    for (auto &p : *this->particles) {
+      if (p.sent) {
+        continue;
+      }
+      ss << "|" << p.x << "," << p.y << "," << p.decay << "," << p.id;
+      p.sent = true;
     }
 
     std::string s = ss.str();

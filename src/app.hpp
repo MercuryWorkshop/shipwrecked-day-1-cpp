@@ -4,6 +4,7 @@
 #include "main.h"
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
@@ -16,6 +17,9 @@ struct Particle {
   float vel_y;
 
   float decay;
+
+  bool sent;
+  int id;
 };
 
 #define START_DIST 40
@@ -38,7 +42,8 @@ public:
           .x = part.x,
           .y = part.y,
           .w = std::lerp((float)MAX_DIST * 2, (float)0, part.decay),
-          .h = std::lerp((float)MAX_DIST * 2, (float)0, part.decay)};
+          .h = std::lerp((float)MAX_DIST * 2, (float)0, part.decay),
+      };
       SDL_RenderTexture(state->renderer, state->texture_array[0], NULL, &rect);
     }
   }
@@ -50,7 +55,8 @@ public:
     if (event->motion.state == SDL_BUTTON_LEFT && dist > 50) {
       last_x = event->motion.x;
       last_y = event->motion.y;
-      particles.push_back({event->motion.x, event->motion.y, 0, 0});
+      particles.push_back(
+          {event->motion.x, event->motion.y, 0, 0, 0, false, rand()});
     }
   }
 

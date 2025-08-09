@@ -211,7 +211,6 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   SDL_SetRenderDrawColor(state->renderer, PRIMARY_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderDebugText(state->renderer, 0, 0, debug_string);
-
   SDL_RenderTexture(state->renderer, state->texture_array[1], NULL, NULL);
   state->app->step();
   state->app->draw();
