@@ -13,6 +13,7 @@ extern "C" {
 }
 #include <stdio.h>
 #include <stdlib.h>
+#include "guthrie.hpp"
 
 static inline Clay_Dimensions SDL_MeasureText(Clay_StringSlice text,
                                               Clay_TextElementConfig *config,
@@ -119,16 +120,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
                   (Clay_ErrorHandler){HandleClayErrors});
   Clay_SetMeasureTextFunction(SDL_MeasureText, state->render_data.fonts);
 
-  OptionalGuthrieState op = guthrie_init("127.0.0.1", 8448);
-  if (op.type == OptionalGuthrieState::Type::TYPE_ERROR) {
-	  printf("%s\n", op.data.error_str);
-	  return SDL_APP_FAILURE;
-  }
-  state->client = op.data.state;
-  guthrie_send_version(state->client);
-  if (guthrie_send_auth(state->client, ":3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3", ":3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3") == -1) {
-    printf("a\n");
-  }
+  state->guthrie = new Guthrie();
+  state->guthrie->init();
 
   printf("init done\n");
 
@@ -177,24 +170,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
 SDL_AppResult AppLoop(void *appstate) {
   ProgState *state = (ProgState *)appstate;
 
-  enum Status status = guthrie_async_read(state->client);
-  if (status == Status::STATUS_PACKET_AVAILABLE) {
-    UniversalPacket *packet = guthrie_parse_packet(state->client);
-	if (
-      packet->payload_case == UniversalPacket__PayloadCase::UNIVERSAL_PACKET__PAYLOAD_AFFIRM &&
-	  packet->affirm->type == AffirmationType::AFFIRMATION_TYPE__AFFIRM_LOGIN
-	) {
-      state->auth = GuthrieAuth::AUTHED;
-	  printf("logged in\n");
-	}
-	if (packet->payload_case == UniversalPacket__PayloadCase::UNIVERSAL_PACKET__PAYLOAD_ERROR)
-	  printf("error: %s\n", packet->error->error);
-	printf("packet\n");
-  } else if (status == Status::STATUS_EXIT) {
-    return SDL_APP_SUCCESS;
-  }
-
-  return SDL_APP_CONTINUE;
+  return state->guthrie->loop();
 }
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
