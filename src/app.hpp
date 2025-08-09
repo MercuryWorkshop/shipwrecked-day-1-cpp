@@ -26,6 +26,8 @@ public:
   ~App() {}
 
   std::vector<Particle> particles;
+  float last_x = 0;
+  float last_y = 0;
 
   void draw() {
     for (auto part : particles) {
@@ -35,8 +37,14 @@ public:
   }
 
   void event(SDL_Event *event) {
-    if (event->motion.state == SDL_BUTTON_LEFT) {
-    }
+
+    // fsqrt(pow(last_x - event->motion.x,
+    //           last_x - event->motion.x)) if (event->motion.state ==
+    //                                          SDL_BUTTON_LEFT) {
+    //   last_x = event->motion.x;
+    //   last_y = event->motion.y;
+    //   particles.push_back({event->motion.x, event->motion.y, 0, 0});
+    // }
   }
 
   void step() {
