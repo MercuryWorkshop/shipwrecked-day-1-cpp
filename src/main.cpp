@@ -39,6 +39,8 @@ void HandleClayErrors(Clay_ErrorData errorData) {
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   SDL_SetAppMetadata("uMessage", "1.0", "com.foxmoss.umessage");
 
+  srand(time(NULL));
+
   ProgState *state = new ProgState;
   *appstate = state;
   state->width = 480;

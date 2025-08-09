@@ -73,8 +73,17 @@ bool deserializeVectorOfParticles(const char *serialized_data,
       return false;
     }
 
+    bool dup; // DUP!
+    for (auto &p : *particles) {
+      if (p.id == id) {
+        dup = true;
+      }
+    }
+    if (dup)
+      continue;
+
     particles->push_back(
-        {x, y, 0, 0, decay}); // vel_x and vel_y are not restored
+        {x, y, 0, 0, decay, true, id}); // vel_x and vel_y are not restored
   }
 
   return true; // Deserialization successful
