@@ -121,7 +121,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   Clay_SetMeasureTextFunction(SDL_MeasureText, state->render_data.fonts);
 
   state->guthrie = new Guthrie();
-  state->guthrie->init();
+  char *host = "127.0.0.1";
+  if (argc > 1) {
+    host = argv[1];
+  }
+  state->guthrie->init(host);
 
   printf("init done\n");
 
