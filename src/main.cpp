@@ -95,7 +95,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   state->app = new App(480, 480, state);
 
   state->texture_array.push_back(
-      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "octo.png"));
+      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "octo2.png"));
+  state->texture_array.push_back(
+      IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "danielfish.png"));
 
   size_t totalMemorySize = Clay_MinMemorySize();
   Clay_Arena clayMemory = (Clay_Arena){
@@ -210,6 +212,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(state->renderer, PRIMARY_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderDebugText(state->renderer, 0, 0, debug_string);
 
+  SDL_RenderTexture(state->renderer, state->texture_array[1], NULL, NULL);
   state->app->step();
   state->app->draw();
 

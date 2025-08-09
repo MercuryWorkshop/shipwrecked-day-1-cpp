@@ -61,7 +61,7 @@ public:
 
       part.vel_x *= 0.3;
       part.vel_y *= 0.3;
-      part.decay += (float)state->delta / 1000000000;
+      part.decay += (float)state->delta / 10000000000;
 
       std::vector<std::vector<Particle>::iterator> iters;
       for (auto iter = particles.begin(); iter != particles.end(); iter++) {
