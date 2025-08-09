@@ -70,8 +70,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libguthrie-client)
 
-target_link_libraries(umessage PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client ${SQLite3_LIBRARIES})
-target_include_directories(umessage PRIVATE ${clay_SOURCE_DIR} ${SQLite3_INCLUDE_DIRS})
+target_link_libraries(umessage PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf guthrie-client)
+target_include_directories(umessage PRIVATE ${clay_SOURCE_DIR})
 
 add_custom_command(TARGET umessage POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy

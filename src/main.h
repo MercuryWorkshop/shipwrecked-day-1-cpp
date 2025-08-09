@@ -23,6 +23,8 @@ struct ProgState {
 
   std::vector<SDL_Texture *> texture_array;
 
+  GuthrieState *client = NULL;
+
   int width;
   int height;
 };

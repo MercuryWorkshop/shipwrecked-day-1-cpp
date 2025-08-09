@@ -115,6 +115,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
                   (Clay_ErrorHandler){HandleClayErrors});
   Clay_SetMeasureTextFunction(SDL_MeasureText, state->render_data.fonts);
 
+  OptionalGuthrieState op = guthrie_init("127.0.0.1", 8448);
+  if (op.type == OptionalGuthrieState::Type::TYPE_ERROR) {
+	  printf("%s\n", op.data.error_str);
+	  return SDL_APP_FAILURE;
+  }
+  state->client = op.data.state;
+  guthrie_send_version(state->client);
+
   return SDL_APP_CONTINUE;
 }
 
