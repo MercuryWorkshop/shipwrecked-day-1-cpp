@@ -69,17 +69,22 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_Log("Couldn't initialize font: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
-  TTF_SetFontWrapAlignment(state->lato_regular_big,
-                           TTF_HORIZONTAL_ALIGN_CENTER);
+  TTF_SetFontWrapAlignment(state->lato_regular_big, TTF_HORIZONTAL_ALIGN_LEFT);
+
+  state->lato_regular_tiny = TTF_OpenFont(PUBLIC_FOLDER "Lato-Regular.ttf", 11);
+  if (state->lato_regular_tiny == NULL) {
+    SDL_Log("Couldn't initialize font: %s", SDL_GetError());
+    return SDL_APP_FAILURE;
+  }
 
   SDL_GetWindowSize(state->window, &state->width, &state->height);
 
   state->render_data.renderer = state->renderer;
-  state->render_data.fonts = (TTF_Font **)SDL_malloc(2 * sizeof(TTF_Font *));
+  state->render_data.fonts = (TTF_Font **)SDL_malloc(3 * sizeof(TTF_Font *));
   state->render_data.textEngine = TTF_CreateRendererTextEngine(state->renderer);
   state->render_data.fonts[0] = state->lato_regular;
   state->render_data.fonts[1] = state->lato_regular_big;
-  state->app = new App(state);
+  state->render_data.fonts[2] = state->lato_regular_tiny;
 
   state->texture_array.push_back(
       IMG_LoadTexture(state->renderer, PUBLIC_FOLDER "foxmoss-pfp.png"));
@@ -133,12 +138,10 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
     Clay_SetPointerState((Clay_Vector2){event->button.x, event->button.y},
                          event->button.button == SDL_BUTTON_LEFT);
     if (event->button.button == SDL_BUTTON_LEFT) {
-      state->app->update_mouse(true);
     }
     break;
   case SDL_EVENT_MOUSE_BUTTON_UP:
     if (event->button.button == SDL_BUTTON_LEFT) {
-      state->app->update_mouse(false);
     }
     break;
   case SDL_EVENT_MOUSE_WHEEL:
@@ -148,7 +151,6 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   case SDL_EVENT_KEY_DOWN:
   case SDL_EVENT_TEXT_INPUT:
   case SDL_EVENT_TEXT_EDITING:
-    state->app->input_event(event);
     break;
   }
 
@@ -160,8 +162,6 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   SDL_SetRenderDrawColor(state->renderer, BACKGROUND_COLOR, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(state->renderer);
-
-  state->app->draw();
 
   static Uint64 accu = 0;
   static Uint64 last = 0;
@@ -178,7 +178,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   }
   past = now;
   accu += 1;
-  Uint64 elapsed = SDL_GetTicksNS() - now;
+  Uint64 elapsed = SDL_GetTicks() - now;
   if (elapsed < 999999) {
     SDL_DelayNS(999999 - elapsed);
   }
@@ -194,7 +194,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
   ProgState *state = (ProgState *)appstate;
 
   if (state != NULL) {
-    delete state->app;
 
     if (state->render_data.renderer)
       SDL_DestroyRenderer(state->render_data.renderer);
@@ -204,6 +203,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
 
     if (state->render_data.fonts) {
       TTF_CloseFont(state->lato_regular);
+      TTF_CloseFont(state->lato_regular_tiny);
       TTF_CloseFont(state->lato_regular_big);
 
       SDL_free(state->render_data.fonts);

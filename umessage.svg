@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   sodipodi:docname="umessage.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="1.1445625"
+     inkscape:cx="199.20276"
+     inkscape:cy="306.23055"
+     inkscape:window-width="1900"
+     inkscape:window-height="1018"
+     inkscape:window-x="10"
+     inkscape:window-y="52"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="30"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="roughen"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1.2"
+       global_randomize="1;910753300"
+       displace_x="0.1;3371760306"
+       displace_y="0.1;1"
+       method="size"
+       max_segment_size="6.43166"
+       segments="2"
+       handles="along"
+       shift_nodes="true"
+       fixed_displacement="false"
+       spray_tool_friendly="false" />
+    <inkscape:path-effect
+       effect="knot"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       switcher_size="12.4"
+       interruption_width="3"
+       prop_to_stroke_width="true"
+       add_stroke_width="inkscape_1.0_and_up"
+       both="false"
+       inverse_width="false"
+       add_other_stroke_width="inkscape_1.0_and_up"
+       crossing_points_vector="" />
+    <linearGradient
+       id="linearGradient2"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#0eaf9b;stop-opacity:1;"
+         offset="0"
+         id="stop2" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.17111658;"
+         offset="1"
+         id="stop3" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="tiling"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1.3.1"
+       unit="px"
+       seed="1;1"
+       lpesatellites=""
+       num_rows="2"
+       num_cols="1"
+       gapx="-415"
+       gapy="-322"
+       offset="0"
+       offset_type="false"
+       scale="-44"
+       rotate="7"
+       mirrorrowsx="false"
+       mirrorrowsy="false"
+       mirrorcolsx="false"
+       mirrorcolsy="false"
+       mirrortrans="false"
+       shrink_interp="false"
+       split_items="false"
+       link_styles="false"
+       interpolate_scalex="true"
+       interpolate_scaley="true"
+       interpolate_rotatex="false"
+       interpolate_rotatey="true"
+       random_scale="false"
+       random_rotate="false"
+       random_gap_y="false"
+       random_gap_x="false"
+       transformorigin="" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,42.426407,0,1 @ F,0,0,1,0,42.426407,0,1 @ F,0,0,1,0,42.426407,0,1 @ F,0,0,1,0,42.426407,0,1 @ F,0,0,1,0,42.426407,0,1 @ F,0,0,1,0,42.426407,0,1 @ F,0,0,1,0,18,0,1 @ F,0,0,1,0,18,0,1 @ F,0,0,1,0,18,0,1"
+       radius="18"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2"
+       id="linearGradient3"
+       x1="210"
+       y1="450"
+       x2="246.25311"
+       y2="38.281204"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:url(#linearGradient3);stroke:#000000;stroke-width:10.1;stroke-miterlimit:10.9"
+       d="m 90,120 c 19.20868,-19.20868 45.26123,-30 72.42641,-30 h 185.14718 c 27.16518,0 53.21773,10.79132 72.42641,30 19.20868,19.20868 30,45.26123 30,72.42641 v 65.14718 c 0,27.16518 -10.79132,53.21773 -30,72.42641 -19.20868,19.20868 -45.26123,30 -72.42641,30 H 138 c -11.73691,0 -23.21121,3.47414 -32.97691,9.9846 l -60.046185,40.0308 c -4.892832,3.26188 -11.144368,-1.51301 -9.284805,-7.0917 L 54.3079,347.0763 C 58.077974,335.76608 60,323.92202 60,312 V 192.42641 C 60,165.26123 70.791323,139.20868 90,120 Z m 76.72789,48.50333 c 11.98761,-9.36575 27.20477,-13.58584 42.30387,-11.7319 l 102.90959,12.63571 c 15.09911,1.85393 28.84332,9.63003 38.20907,21.61765 9.36574,11.98761 13.58584,27.20476 11.7319,42.30387 l -4.44609,36.21049 c -1.85394,15.0991 -9.63004,28.84332 -21.61765,38.20906 -11.98761,9.36575 -27.20477,13.58584 -42.30387,11.73191 L 177.02829,305.17738 c -6.52368,-0.80101 -13.13849,0.34693 -19.01084,3.29913 l -36.10719,18.15219 c -2.94218,1.47912 -6.09107,-1.60154 -4.67675,-4.57541 l 14.15855,-29.77096 c 2.86739,-6.02921 4.74402,-12.48127 5.55766,-19.10784 l 8.16052,-66.4621 c 1.85394,-15.0991 9.63004,-28.84331 21.61765,-38.20906 z"
+       id="path1"
+       sodipodi:nodetypes="cccccccccc"
+       inkscape:path-effect="#path-effect1;#path-effect2"
+       inkscape:original-d="m 60,150 60,-60 h 270 l 60,60 v 150 l -60,60 H 120 l -90,60 30,-90 z" />
+  </g>
+</svg>

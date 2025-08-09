@@ -1,6 +1,5 @@
 #pragma once
 #include "SDL3/SDL_render.h"
-#include "app.h"
 #include "sdl_clay.h"
 #include <cstddef>
 #include <guthrie.h>
@@ -18,12 +17,11 @@ struct ProgState {
   SDL_Window *window = NULL;
   SDL_Renderer *renderer = NULL;
   TTF_Font *lato_regular = NULL;
+  TTF_Font *lato_regular_tiny = NULL;
   TTF_Font *lato_regular_big = NULL;
   Clay_SDL3RendererData render_data;
 
   std::vector<SDL_Texture *> texture_array;
-
-  App *app;
 
   int width;
   int height;
